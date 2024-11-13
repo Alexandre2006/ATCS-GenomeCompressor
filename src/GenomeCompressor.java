@@ -5,11 +5,10 @@
  *  Dependencies: BinaryIn.java BinaryOut.java
  *  Data files:   genomeTest.txt
  *                virus.txt
- *
+ * <p>
  *  Compress or expand a genomic sequence using a 2-bit code.
  ******************************************************************************/
 
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -41,18 +40,14 @@ public class GenomeCompressor {
         int remainder = length % 8;
 
         // Write length as first 4 bits
-        BinaryStdOut.write(false);
-        BinaryStdOut.write(remainder > 3);
-        BinaryStdOut.write(remainder > 1);
-        BinaryStdOut.write(remainder % 2 != 0);
+        BinaryStdOut.write(remainder, 4);
 
         // Write letters
         for (char letter : s.toCharArray()) {
             int letterValue = letterMap.get(letter);
 
             // Write bits
-            BinaryStdOut.write(letterValue > 1);
-            BinaryStdOut.write(letterValue % 2 != 0);
+            BinaryStdOut.write(letterValue, 2);
         }
 
         BinaryStdOut.close();
@@ -71,25 +66,14 @@ public class GenomeCompressor {
         );
 
         // Read remainder
-        int remainder = 0;
-        for (int i = 0; i < 4; i++) {
-            remainder = (remainder << 1) + (BinaryStdIn.readBoolean() ? 1 : 0);
-        }
+        int remainder = BinaryStdIn.readInt(4);
 
         // Buffer (8 letters)
         StringBuilder buffer = new StringBuilder();
 
         // Read letters
         while (!BinaryStdIn.isEmpty()) {
-            int letterValue = 0;
-
-            if (BinaryStdIn.readBoolean()) {
-                letterValue += 2;
-            }
-
-            if (BinaryStdIn.readBoolean()) {
-                letterValue += 1;
-            }
+            int letterValue = BinaryStdIn.readInt(2);
 
             buffer.append(letterMap.get(letterValue));
 
