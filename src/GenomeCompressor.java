@@ -9,6 +9,9 @@
  *  Compress or expand a genomic sequence using a 2-bit code.
  ******************************************************************************/
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  *  The {@code GenomeCompressor} class provides static methods for compressing
  *  and expanding a genomic sequence using a 2-bit code.
@@ -24,8 +27,29 @@ public class GenomeCompressor {
      * { A, C, T, G } from standard input; compresses and writes the results to standard output.
      */
     public static void compress() {
+        Map<Character, Integer> letterMap = Map.of(
+                'A', 0,
+                'C', 1,
+                'T', 2,
+                'G', 3
+        );
 
-        // TODO: complete the compress() method
+        String s = BinaryStdIn.readString();
+
+        // Get length
+        int length = s.length();
+
+        // Write length as first byte
+        BinaryStdOut.write(length);
+
+        // Write letters
+        for (char letter : s.toCharArray()) {
+            int letterValue = letterMap.get(letter);
+
+            // Write bits
+            BinaryStdOut.write(letterValue % 2 == 0);
+            BinaryStdOut.write(letterValue > 1);
+        }
 
         BinaryStdOut.close();
     }
