@@ -47,8 +47,8 @@ public class GenomeCompressor {
             int letterValue = letterMap.get(letter);
 
             // Write bits
-            BinaryStdOut.write(letterValue % 2 == 0);
             BinaryStdOut.write(letterValue > 1);
+            BinaryStdOut.write(letterValue % 2 != 0);
         }
 
         BinaryStdOut.close();
@@ -59,7 +59,31 @@ public class GenomeCompressor {
      */
     public static void expand() {
 
-        // TODO: complete the expand() method
+        Map<Integer, Character> letterMap = Map.of(
+                0, 'A',
+                1, 'C',
+                2, 'T',
+                3, 'G'
+        );
+
+        // Read length
+        int length = BinaryStdIn.readInt();
+
+        // Read letters
+        while (!BinaryStdIn.isEmpty()) {
+            int letterValue = 0;
+
+            if (BinaryStdIn.readBoolean()) {
+                letterValue += 2;
+            }
+
+            if (BinaryStdIn.readBoolean()) {
+                letterValue += 1;
+            }
+
+            // Write letter
+            BinaryStdOut.write(letterMap.get(letterValue));
+        }
 
         BinaryStdOut.close();
     }
