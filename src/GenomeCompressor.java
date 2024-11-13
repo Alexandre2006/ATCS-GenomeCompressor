@@ -36,11 +36,15 @@ public class GenomeCompressor {
 
         String s = BinaryStdIn.readString();
 
-        // Get length
+        // Get remainder
         int length = s.length();
+        int remainder = length % 8;
 
-        // Write length as first byte
-        BinaryStdOut.write(length);
+        // Write length as first 4 bits
+        BinaryStdOut.write(false);
+        BinaryStdOut.write(remainder > 3);
+        BinaryStdOut.write(remainder > 1);
+        BinaryStdOut.write(remainder % 2 != 0);
 
         // Write letters
         for (char letter : s.toCharArray()) {
@@ -66,8 +70,14 @@ public class GenomeCompressor {
                 3, 'G'
         );
 
-        // Read length
-        int length = BinaryStdIn.readInt();
+        // Read remainder
+        int remainder = 0;
+        for (int i = 0; i < 4; i++) {
+            remainder = (remainder << 1) + (BinaryStdIn.readBoolean() ? 1 : 0);
+        }
+
+        // Buffer (8 letters)
+        StringBuilder buffer = new StringBuilder();
 
         // Read letters
         while (!BinaryStdIn.isEmpty()) {
@@ -81,9 +91,17 @@ public class GenomeCompressor {
                 letterValue += 1;
             }
 
-            // Write letter
-            BinaryStdOut.write(letterMap.get(letterValue));
+            buffer.append(letterMap.get(letterValue));
+
+            // If buffer is full, write to output
+            if (buffer.length() == 8) {
+                BinaryStdOut.write(buffer.toString());
+                buffer.setLength(0);
+            }
         }
+
+        // Write remaining buffer to output
+        BinaryStdOut.write(buffer.substring(0, remainder));
 
         BinaryStdOut.close();
     }
