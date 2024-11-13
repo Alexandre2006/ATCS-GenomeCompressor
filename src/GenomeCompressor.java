@@ -18,6 +18,7 @@ import java.util.Map;
  *  @author Robert Sedgewick
  *  @author Kevin Wayne
  *  @author Zach Blick
+ *  @author Alexandre Antoine Haddad-Delaveau
  */
 public class GenomeCompressor {
 
